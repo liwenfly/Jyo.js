@@ -74,7 +74,6 @@ Jyo.Renderer.WebGL.prototype = new Jyo.Object({
                this.clear(new Jyo.Color(colorStr));
            }),
     begin: function () {
-        this.clear();
         this.context.save();
     },
     end: function () {

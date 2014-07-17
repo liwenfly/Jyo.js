@@ -41,7 +41,6 @@ Jyo.Renderer.Canvas.prototype = new Jyo.Object({
                ctx.fillRect(0, 0, this.width, this.height);
            }),
     begin: function () {
-        this.clear();
         this.context.save();
     },
     end: function () {

@@ -73,7 +73,7 @@ Jyo.Game.prototype = new Jyo.Object({
         function renderLoop(gameTime) {
             gameTime = gameTime | 0;
             var status = _this._currentStatus;
-            if (status) {
+            if (status && !_this.isPause) {
                 if (_this.content.isLoading()) {
                     status.loadingScreen(gameTime);
                 } else {
