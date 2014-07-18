@@ -296,16 +296,16 @@ Jyo.Renderer.WebGL.prototype = new Jyo.Object({
                     /// <param name="colorStr" type="String">颜色字符串值</param>
                     /// <param name="font" type="String">字体字符串值</param>
 
-                    //var ctx = this.context;
+                    var ctx = this.context;
 
-                    //ctx.fillStyle = colorStr || "#000000";
-                    //ctx.font = font || "14px Arial";
+                    ctx.fillStyle = colorStr || "#000000";
+                    ctx.font = font || "14px Arial";
 
-                    //var fs = this.getTextSize(str, ctx.font);
-                    //var strList = str.split(/\r\n|\n|\r/ig);
-                    //for (var i = 0; i < strList.length; i++) {
-                    //    ctx.fillText(strList[i], x, y + fs.height * (i + 0.8));
-                    //}
+                    var fs = this.getTextSize(str, ctx.font);
+                    var strList = str.split(/\r\n|\n|\r/ig);
+                    for (var i = 0; i < strList.length; i++) {
+                        ctx.fillText(strList[i], x, y + fs.height * (i + 0.8));
+                    }
                 }),
     drawLine: Jyo.Overload().
               add("Number, Number, Number, Number", function (x1, y1, x2, y2) {
@@ -924,6 +924,12 @@ Jyo.Renderer.WebGL.prototype = new Jyo.Object({
         var gl2d = this,
             gl = this.gl;
 
+        var textCanvas = document.createElement("canvas");
+        textCanvas.width = gl.canvas.width;
+        textCanvas.height = gl.canvas.height;
+        textCanvas.noCatch = true;
+        var textCtx = textCanvas.getContext("2d");
+
         var reRGBAColor = /^rgb(a)?\(\s*(-?[\d]+)(%)?\s*,\s*(-?[\d]+)(%)?\s*,\s*(-?[\d]+)(%)?\s*,?\s*(-?[\d\.]+)?\s*\)$/;
         var reHSLAColor = /^hsl(a)?\(\s*(-?[\d\.]+)\s*,\s*(-?[\d\.]+)%\s*,\s*(-?[\d\.]+)%\s*,?\s*(-?[\d\.]+)?\s*\)$/;
         var reHex6Color = /^#([0-9A-Fa-f]{6})$/;
@@ -1075,6 +1081,7 @@ Jyo.Renderer.WebGL.prototype = new Jyo.Object({
             get: function () { return colorVecToString(drawState.fillStyle); },
             set: function (value) {
                 drawState.fillStyle = colorStringToVec4(value) || drawState.fillStyle;
+                textCtx.fillStyle = value;
             }
         });
 
@@ -1084,6 +1091,7 @@ Jyo.Renderer.WebGL.prototype = new Jyo.Object({
             get: function () { return colorVecToString(drawState.strokeStyle); },
             set: function (value) {
                 drawState.strokeStyle = colorStringToVec4(value) || drawStyle.strokeStyle;
+                textCtx.strokeStyle = value;
             }
         });
 
@@ -1134,6 +1142,7 @@ Jyo.Renderer.WebGL.prototype = new Jyo.Object({
             get: function () { return drawState.shadowOffsetX; },
             set: function (value) {
                 drawState.shadowOffsetX = value;
+                textCtx.shadowOffsetX = value;
             }
         });
 
@@ -1143,6 +1152,7 @@ Jyo.Renderer.WebGL.prototype = new Jyo.Object({
             get: function () { return drawState.shadowOffsetY; },
             set: function (value) {
                 drawState.shadowOffsetY = value;
+                textCtx.shadowOffsetY = value;
             }
         });
 
@@ -1152,6 +1162,7 @@ Jyo.Renderer.WebGL.prototype = new Jyo.Object({
             get: function () { return drawState.shadowBlur; },
             set: function (value) {
                 drawState.shadowBlur = value;
+                textCtx.shadowBlur = value;
             }
         });
 
@@ -1161,6 +1172,7 @@ Jyo.Renderer.WebGL.prototype = new Jyo.Object({
             get: function () { return drawState.shadowColor; },
             set: function (value) {
                 drawState.shadowColor = value;
+                textCtx.shadowColor = value;
             }
         });
 
@@ -1170,6 +1182,7 @@ Jyo.Renderer.WebGL.prototype = new Jyo.Object({
             get: function () { return drawState.font; },
             set: function (value) {
                 drawState.font = value;
+                textCtx.font = value;
             }
         });
 
@@ -1179,6 +1192,7 @@ Jyo.Renderer.WebGL.prototype = new Jyo.Object({
             get: function () { return drawState.textAlign; },
             set: function (value) {
                 drawState.textAlign = value;
+                textCtx.textAlign = value;
             }
         });
 
@@ -1188,6 +1202,7 @@ Jyo.Renderer.WebGL.prototype = new Jyo.Object({
             get: function () { return drawState.textBaseline; },
             set: function (value) {
                 drawState.textBaseline = value;
+                textCtx.textBaseline = value;
             }
         });
 
@@ -1198,6 +1213,7 @@ Jyo.Renderer.WebGL.prototype = new Jyo.Object({
             get: function () { return drawState.globalAlpha; },
             set: function (value) {
                 drawState.globalAlpha = value;
+                textCtx.globalAlpha = value;
             }
         });
 
@@ -1331,7 +1347,10 @@ Jyo.Renderer.WebGL.prototype = new Jyo.Object({
         gl.clearRect = function clearRect(x, y, width, height) { };
 
         gl.fillText = function (text, x, y, fontSize) {
-            // 暂不支持fillText
+            textCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            textCtx.fillText(text, x, y);
+
+            this.drawImage(textCanvas, 0, 0);
         };
 
         gl.strokeText = function (text, x, y, fontHeight) {

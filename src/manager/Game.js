@@ -66,7 +66,7 @@ Jyo.Game.prototype = new Jyo.Object({
 
         if (this.isFixedTimeStep) {
             this._updateTimer = setInterval(function () {
-                _this.update(Date.now());
+                !_this.isPause && status.update(Date.now());
             }, this.targetElapsedTime);
         }
 

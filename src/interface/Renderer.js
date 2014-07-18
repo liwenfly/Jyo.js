@@ -138,48 +138,69 @@ Jyo.Renderer.prototype = new Jyo.Object({
             this.autoSize();
         }
     },
-    enableAutoSize: function (mode) {
-        /// <summary>启用画布自适应</summary>
-        /// <param name="mode" type="String" optional="true">适应模式，可用值如下:&#10;fill&#10;ratio&#10;默认为ratio</param>
+    enableAutoSize: Jyo.Overload().
+                    add(null, function () {
+                        /// <summary>启用ratio模式进行画布自适应</summary>
 
-        var _this = this;
+                        this.enableAutoSize("ratio");
+                    }).
+                    add("Function", function (callback) {
+                        /// <summary>启用ratio模式进行画布自适应</summary>
+                        /// <param name="callback" type="Function">重置尺寸时触发函数</param>
 
-        // 判断是否直接在body中显示
-        // 如果是，则增加全屏样式
-        var parentElement = this.domElement.parentElement || this.domElement.parentNode || document.body;
-        if (parentElement == document.body) {
-            var style;
-            var str = "html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;}";
-            if (typeof window.attachEvent != "undefined") {
-                style = document.styleSheets["JyoJsHTMLStyle"] || document.createStyleSheet();
-                style.owningElement.id = "JyoJsHTMLStyle";
-                style.cssText = str;
-            }
-            else {
-                style = document.createElement("style");
-                style.id = "JyoJsHTMLStyle";
-                style.innerHTML = str;
-                var head = document.getElementsByTagName('head')[0];
-                if (typeof head != "undefined") {
-                    head.appendChild(style);
-                } else {
-                    document.appendChild(style);
-                }
-            }
-        }
+                        this._autoSizeFunction = callback;
+                        this.enableAutoSize("ratio");
+                    }).
+                    add("String", function (mode) {
+                        /// <summary>启用画布自适应</summary>
+                        /// <param name="mode" type="String" optional="true">适应模式，可用值如下:&#10;fill&#10;ratio&#10;默认为ratio</param>
 
-        this.autoSizeMode = function () {
-            if (mode !== "ratio" && mode !== "fill") {
-                return "ratio";
-            }
-            return mode;
-        }();
-        this._autoSizeFun = function () {
-            _this.autoSize();
-        };
-        window.addEventListener("resize", this._autoSizeFun);
-        this.autoSize();
-    },
+                        var _this = this;
+
+                        // 判断是否直接在body中显示
+                        // 如果是，则增加全屏样式
+                        var parentElement = this.domElement.parentElement || this.domElement.parentNode || document.body;
+                        if (parentElement == document.body) {
+                            var style;
+                            var str = "html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;} @viewport{width:device-width;user-zoom:fixed;user-scalable:fixed;}";
+                            if (typeof window.attachEvent != "undefined") {
+                                style = document.styleSheets["JyoJsHTMLStyle"] || document.createStyleSheet();
+                                style.owningElement.id = "JyoJsHTMLStyle";
+                                style.cssText = str;
+                            }
+                            else {
+                                style = document.createElement("style");
+                                style.id = "JyoJsHTMLStyle";
+                                style.innerHTML = str;
+                                var head = document.getElementsByTagName('head')[0];
+                                if (typeof head != "undefined") {
+                                    head.appendChild(style);
+                                } else {
+                                    document.appendChild(style);
+                                }
+                            }
+                        }
+
+                        this.autoSizeMode = function () {
+                            if (mode !== "ratio" && mode !== "fill") {
+                                return "ratio";
+                            }
+                            return mode;
+                        }();
+                        this._autoSizeFun = function () {
+                            _this.autoSize();
+                        };
+                        window.addEventListener("resize", this._autoSizeFun);
+                        this.autoSize();
+                    }).
+                    add("String, Function", function (mode, callback) {
+                        /// <summary>启用画布自适应</summary>
+                        /// <param name="mode" type="String">适应模式，可用值如下:&#10;fill&#10;ratio&#10;默认为ratio</param>
+                        /// <param name="callback" type="Function">重置尺寸时触发函数</param>
+
+                        this._autoSizeFunction = callback;
+                        this.enableAutoSize(mode);
+                    }),
     disableAutoSize: function () {
         /// <summary>停用画布自适应</summary>
 
@@ -241,9 +262,16 @@ Jyo.Renderer.prototype = new Jyo.Object({
         }
         style.padding = "0px";
 
-        // 如果渲染器需要其他缩放操作则触发
-        if (typeof this._autoSize != "undefined") {
+        if (typeof this._autoSize == "function") {
+            // 如果渲染器需要其他缩放操作则触发
+
             this._autoSize(parentWidth, parentHeight);
+        }
+
+        if (typeof this._autoSizeFunction == "function") {
+            // 自定义操作
+
+            this._autoSizeFunction(scaling);
         }
     },
     getTextSize: function (str, font) {
