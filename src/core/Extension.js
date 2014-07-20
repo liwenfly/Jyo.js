@@ -45,14 +45,13 @@ Array.prototype.shuffle = function () {
     /// <summary>洗牌</summary>
     /// <returns type="Array"></returns>
 
-    var tempList = [];
-
     for (var i = this.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
-        tempList[i] = this[j];
-        tempList[j] = this[i];
+        var temp = this[i];
+        this[i] = this[j];
+        this[j] = temp;
     }
-    return tempList;
+    return this;
 };
 
 Array.prototype.insert = function (value, index) {
