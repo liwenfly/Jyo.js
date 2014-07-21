@@ -54,6 +54,41 @@ Array.prototype.shuffle = function () {
     return this;
 };
 
+Array.prototype.pdf2cdf = function () {
+    var cdf = this.slice();
+
+    for (var i = 1; i < cdf.length - 1; i++)
+        cdf[i] += cdf[i - 1];
+
+    // Force set last cdf to 1, preventing floating-point summing error in the loop.
+    cdf[cdf.length - 1] = 1;
+
+    return cdf;
+};
+
+Array.prototype.discreteSampling = function () {
+    var y = Math.random();
+    for (var x in this)
+        if (y < this[x])
+            return x;
+
+    return -1; // should never runs here, assuming last element in cdf is 1
+};
+
+Array.prototype.random = function (probabilityTable) {
+    /// <summary>随机抽取元素</summary>
+    /// <param name="probabilityTable" type="Array" optional="true">概率数组(长度必须和本数组一致)</param>
+
+    if (typeof probabilityTable != "undefined" && probabilityTable instanceof Array) {
+        var targetCdf = probabilityTable.pdf2cdf();
+        return this[targetCdf.discreteSampling()];
+    } else {
+        if (probabilityTable.length == this.length) {
+            return this[Math.floor(Math.random() * this.length)];
+        }
+    }
+};
+
 Array.prototype.insert = function (value, index) {
     /// <summary>插入项</summary>
     /// <param name="value" type="Object">元素</param>
