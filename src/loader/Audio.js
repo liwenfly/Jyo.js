@@ -3,11 +3,12 @@
     type: "Audio",
     // 指示支持的格式
     supportList: ["mp3", "ogg", "wav", "aac"],
-    load: function (content, object, filename) {
+    load: function (content, object, filename, callback) {
         /// <summary>加载</summary>
         /// <param name="content" type="Jyo.Content">内容管理器对象</summary>
         /// <param name="object" type="Object">要绑定到的对象</param>
         /// <param name="filename" type="String">文件名</param>
+        /// <param name="callback" type="Function" optional="true">加载完成后的处理函数</param>
 
         var audio = document.createElement("audio");
 
@@ -31,8 +32,8 @@
         audio.addEventListener("error", function (e) {
             if (this.error.code == 4) {
                 object.bind(content.renderer, this);
-
                 content.loadDoneNum++;
+                callback && callback(object);
             } else {
                 throw new Error("File \"" + filename + "\" failed to load");
             }
@@ -40,8 +41,8 @@
 
         audio.addEventListener("canplaythrough", function () {
             object.bind(content.renderer, this);
-
             content.loadDoneNum++;
+            callback && callback(object);
         });
 
         audio.src = filename;

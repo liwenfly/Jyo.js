@@ -71,6 +71,36 @@ Jyo.Content.prototype = new Jyo.Object({
                   throw new Error("Does not support the type of file to load");
               }
           }).
+          add("Object, String, Function", function (object, filename, callback) {
+              /// <summary>加载文件</summary>
+              /// <param name="object" type="Object">要绑定到的对象</param>
+              /// <param name="filename" type="String">要加载的文件名</param>
+              /// <param name="callback" type="Function">加载完成后处理函数</param>
+
+              var _this = this;
+
+              // 获取文件后缀名
+              var extName = /\.([^\.]+)$/.exec(filename)[1].trim().toLowerCase();
+
+              if (typeof object.useLoader != "undefined") {
+                  this.loadNum++;
+                  var loader = null;
+                  for (var i in Jyo.Content) {
+                      loader = Jyo.Content[i];
+                      if (typeof loader.supportList != "undefined") {
+                          for (var extIndex = loader.supportList.length; extIndex--;) {
+                              if (extName == loader.supportList[extIndex] && object.useLoader == loader.type) {
+                                  loader.load(this, object, this.rootDirectory + "/" + filename, callback);
+                                  return;
+                              }
+                          }
+                      }
+                  }
+                  throw new Error("\"" + extName + "\" file does not support the import");
+              } else {
+                  throw new Error("Does not support the type of file to load");
+              }
+          }).
           add("Object, String, Object", function (object, filename, loader) {
               /// <summary>加载文件</summary>
               /// <param name="object" type="Object">要绑定到的对象</param>

@@ -3,11 +3,12 @@
     type: "Shader",
     // 指示支持的格式
     supportList: ["vs", "fs", "glvs", "glfs"],
-    load: function (content, object, filename) {
+    load: function (content, object, filename, callback) {
         /// <summary>加载</summary>
         /// <param name="content" type="Jyo.Content">内容管理器对象</summary>
         /// <param name="object" type="Object">要绑定到的对象</param>
         /// <param name="filename" type="String">文件名</param>
+        /// <param name="callback" type="Function" optional="true">加载完成后的处理函数</param>
 
         // 获取文件后缀名
         var extName = /\.([^\.]+)$/.exec(filename)[1].trim().toLowerCase();
@@ -40,6 +41,7 @@
                 }
                 object.bind(content.renderer, shaderObj);
                 content.loadDoneNum++;
+                callback && callback(object);
             }
         });
     },
