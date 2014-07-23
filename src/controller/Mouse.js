@@ -80,8 +80,7 @@ Jyo.Mouse.prototype = new Jyo.Object({
         if (isLock || typeof isLock == "undefined") {
             this.element.requestPointerLock();
             Jyo.Mouse.lockObject = this;
-        }
-        else {
+        } else {
             document.exitPointerLock();
             return false;
         }
