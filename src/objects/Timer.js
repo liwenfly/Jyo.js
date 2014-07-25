@@ -181,20 +181,18 @@ Jyo.Timer.prototype = new Jyo.Object({
         /// <summary>返回此矩形的哈希代码</summary>
         /// <returns type="Number">一个指定此矩形的哈希代码的整数</returns>
 
-        return this.x ^ this.y ^ this.width ^ this.height;
+        return 120;
     },
     equals: function (value) {
-        /// <summary>测试两个矩形是否相等</summary>
-        /// <param name="value" type="Jyo.Rectangle">要进行比较的Jyo.Rectangle</param>
+        /// <summary>测试两个计时器是否相等</summary>
+        /// <param name="value" type="Jyo.Timer">要进行比较的Jyo.Timer</param>
         /// <returns type="Boolean"></returns>
 
         if (this === value ||
-            value instanceof Jyo.Rectangle &&
+            value instanceof Jyo.Timer &&
             this.getHashCode() === value.getHashCode() &&
-            this.x === value.x &&
-            this.y === value.y &&
-            this.width === value.width &&
-            this.height === value.height) {
+            this.interval === value.interval &&
+            this.tick === value.tick) {
             return true;
         }
         return false;

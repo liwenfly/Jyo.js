@@ -3,17 +3,17 @@
     /// <returns type="Jyo.Status"></returns>
 
     // 加载资源函数
-    this.load = Function();
+    this.load = function () { };
 
     // 绘制内容函数
-    this.draw = Function();
+    this.draw = function () { };
 
     // 更新数据函数
-    this.update = Function();
+    this.update = function () { };
 
     // 卸载资源函数
-    this.unload = Function();
+    this.unload = function () { };
 
     // 加载中显示屏幕
-    this.loadingScreen = Function();
+    this.loadingScreen = function () { };
 };

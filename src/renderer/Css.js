@@ -5,6 +5,8 @@
     // 隐藏超出部分
     this.canvas.style.overflow = "hidden";
 
+    this.context = {};
+
     // 用于开启硬件加速的样式
     this.css3d = function () {
         var element = document.createElement("div");
@@ -90,25 +92,21 @@ Jyo.Renderer.Css.prototype = new Jyo.Object({
            add(null, function () {
                /// <summary>清空画布</summary>
 
-               this.canvas.innerHTML = "";
-
-               //for (var i = 0; i < this.catchList.length; i++) {
-               //    this.canvas.removeChild(this.catchList[i].element);
-               //}
-               //this.catchList.clear();
+               return;
            }).
            add("Jyo.Color", function (color) {
                /// <summary>清空画布</summary>
                /// <param name="color" type="Jyo.Color">颜色对象</param>
 
                this.clear(color.toRgba());
+               this.canvas.innerHTML = "";
            }).
            add("String", function (colorStr) {
                /// <summary>清空画布</summary>
                /// <param name="colorStr" type="String">颜色字符串值</param>
 
                this.canvas.style.backgroundColor = colorStr;
-               this.clear();
+               this.canvas.innerHTML = "";
            }),
     begin: function () {
         /// <summary>开始绘制</summary>
@@ -124,7 +122,7 @@ Jyo.Renderer.Css.prototype = new Jyo.Object({
         // 检查若有节点增删则重置画布
         if (tl.length != cl.length) {
             cl.clear();
-            this.clear();
+            this.canvas.innerHTML = "";
         }
         // 重新创建元素
         if (!cl.length) {

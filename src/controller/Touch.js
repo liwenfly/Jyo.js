@@ -7,7 +7,7 @@
 
 Jyo.Touch.constructor = Jyo.Overload().
                         add("Jyo.Renderer", function (renderer) {
-                            // 与之有关的渲染其对象
+                            // 与之有关的渲染器对象
                             this.renderer = renderer;
 
                             // 当前鼠标监听的元素
@@ -39,11 +39,21 @@ Jyo.Touch.prototype = new Jyo.Object({
         // 监听触摸按下事件
         el.addEventListener("touchstart", function (e) {
             var changeList = [];
+            var x = 0,
+                y = 0;
             for (var i = 0; i < e.changedTouches.length; i++) {
+                if (_this.renderer.mode == "Css") {
+                    var scaling = 1 / _this.renderer.scaling;
+                    x = e.changedTouches[i].pageX * scaling,
+                    y = e.changedTouches[i].pageY * scaling;
+                } else {
+                    x = ((e.changedTouches[i].pageX - el.offsetLeft) * (_this.renderer.width / el.clientWidth)) | 0,
+                    y = ((e.changedTouches[i].pageY - el.offsetTop) * (_this.renderer.height / el.clientHeight)) | 0;
+                }
                 var object = {
                     id: e.changedTouches[i].identifier,
-                    x: ((e.changedTouches[i].pageX - el.offsetLeft) * (_this.renderer.width / el.clientWidth)) | 0,
-                    y: ((e.changedTouches[i].pageY - el.offsetTop) * (_this.renderer.height / el.clientHeight)) | 0
+                    x: x,
+                    y: y
                 };
                 _this.list.push(object);
                 changeList.push(object);
@@ -57,12 +67,22 @@ Jyo.Touch.prototype = new Jyo.Object({
             (typeof event != "undefined" ? event : e).preventDefault();
 
             var changeList = [];
+            var x = 0,
+                y = 0;
 
             for (var i = 0; i < _this.list.length; i++) {
                 for (var n = 0; n < e.changedTouches.length; n++) {
+                    if (_this.renderer.mode == "Css") {
+                        var scaling = 1 / _this.renderer.scaling;
+                        x = e.changedTouches[n].pageX * scaling,
+                        y = e.changedTouches[n].pageY * scaling;
+                    } else {
+                        x = ((e.changedTouches[n].pageX - el.offsetLeft) * (_this.renderer.width / el.clientWidth)) | 0,
+                        y = ((e.changedTouches[n].pageY - el.offsetTop) * (_this.renderer.height / el.clientHeight)) | 0;
+                    }
                     if (e.changedTouches[n].identifier == _this.list[i].id) {
-                        _this.list[i].x = ((e.changedTouches[n].pageX - el.offsetLeft) * (_this.renderer.width / el.clientWidth)) | 0;
-                        _this.list[i].y = ((e.changedTouches[n].pageY - el.offsetTop) * (_this.renderer.height / el.clientHeight)) | 0;
+                        _this.list[i].x = x,
+                        _this.list[i].y = y;
                         changeList.push(_this.list[i]);
                     }
                 }

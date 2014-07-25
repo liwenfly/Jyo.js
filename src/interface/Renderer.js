@@ -238,6 +238,20 @@ Jyo.Renderer.prototype = new Jyo.Object({
         var scaling = Math.min(parentWidth / width, parentHeight / height);
         this.scaling = scaling;
 
+        if (this.mode != "Css") {
+            // 若不使用Css渲染器,则手动计算子元素缩放
+
+            var els = this.domElement.childNodes;
+            for (var i = 0; i < els.length; i++) {
+                if (typeof els[i].tagName == "undefined" || els[i].tagName.toLowerCase() != "div") continue;
+                var cs = els[i].style;
+                cs[Jyo.prefix.lowercase + "Transform"] = "scale(" + scaling + "," + scaling + ")";
+                cs["transform"] = "scale(" + scaling + "," + scaling + ")";
+                cs[Jyo.prefix.lowercase + "TransformOrigin"] = "0% 0%";
+                cs["transformOrigin"] = "0% 0%";
+            }
+        }
+
         //// 设置画布大小(Svg有效)
         //if (this.canvas instanceof SVGSVGElement) {
         //    this.canvas.setAttribute("viewBox", "0 0 " + width + " " + height);
