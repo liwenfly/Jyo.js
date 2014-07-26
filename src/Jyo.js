@@ -111,7 +111,7 @@
     this.init = function (rootPath, callback) {
         var files = ["core/Compatible.js", "core/Extension.js", "core/Overload.js",
                      "interface/Object.js", "interface/Renderer.js", "interface/Status.js",
-                     "objects/Matrix.js", "objects/Color.js", "objects/Rectangle.js", "objects/Shader.js", "objects/Texture.js", "objects/Audio.js", "objects/Timer.js",
+                     "objects/Matrix.js", "objects/Color.js", "objects/Rectangle.js", "objects/Shader.js", "objects/Texture.js", "objects/Audio.js", "objects/Timer.js", "objects/Orientation.js",
                      "manager/Content.js", "manager/Game.js",
                      "controller/Mouse.js", "controller/Touch.js",
                      "loader/Shader.js", "loader/Texture.js", "loader/Audio.js",
