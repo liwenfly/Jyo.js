@@ -159,12 +159,6 @@ if (!navigator.getGamepads) {
     };
 }
 
-// 震动
-navigator.vibrate = navigator.vibrate ||
-                    navigator.webkitVibrate ||
-                    navigator.mozVibrate ||
-                    navigator.msVibrate;
-
 // Url操作
 window.URL = window.URL || window[Jyo.prefix.js + "URL"];
 
