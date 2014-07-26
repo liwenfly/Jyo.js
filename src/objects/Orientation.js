@@ -1,4 +1,4 @@
-﻿Jyo.Orientation = Jyo.Ojbect({
+﻿Jyo.Orientation = new Jyo.Object({
     _eventList: [[], []],
     addEventListener: function (type, listener) {
         /// <summary>绑定重力感应事件</summary>
@@ -31,7 +31,7 @@ void function () {
     var lastGamma = 0;
     var lastBeta = 0;
 
-    function orientationListener() {
+    function orientationListener(evt) {
         // For FF3.6+
         if (!evt.gamma && !evt.beta) {
             // angle=radian*180.0/PI 在firefox中x和y是弧度值,
@@ -43,15 +43,15 @@ void function () {
         /* gamma:  -90..90  (rotation around y axis) */
         /* alpha:    0..360 (rotation around z axis) (-180..180) */
 
-        var gamma = evt.gamma
-        var beta = evt.beta
-        var alpha = evt.alpha
+        var gamma = evt.gamma || 0;
+        var beta = evt.beta || 0;
+        var alpha = evt.alpha || 0;
 
         if (evt.accelerationIncludingGravity) {
             // window.removeEventListener('deviceorientation', this.orientationListener, false);
-            gamma = event.accelerationIncludingGravity.x * 10
-            beta = -event.accelerationIncludingGravity.y * 10
-            alpha = event.accelerationIncludingGravity.z * 10
+            gamma = event.accelerationIncludingGravity.x * 10;
+            beta = -event.accelerationIncludingGravity.y * 10;
+            alpha = event.accelerationIncludingGravity.z * 10;
         }
 
 
