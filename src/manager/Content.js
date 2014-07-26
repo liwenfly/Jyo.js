@@ -47,6 +47,8 @@ Jyo.Content.prototype = new Jyo.Object({
               /// <param name="object" type="Object">要绑定到的对象</param>
               /// <param name="filename" type="String">要加载的文件名</param>
 
+              if (object.object) return;
+
               var _this = this;
 
               // 获取文件后缀名
@@ -77,6 +79,8 @@ Jyo.Content.prototype = new Jyo.Object({
               /// <param name="filename" type="String">要加载的文件名</param>
               /// <param name="callback" type="Function">加载完成后处理函数</param>
 
+              if (object.object) return;
+
               var _this = this;
 
               // 获取文件后缀名
@@ -106,6 +110,8 @@ Jyo.Content.prototype = new Jyo.Object({
               /// <param name="object" type="Object">要绑定到的对象</param>
               /// <param name="filename" type="String">要加载的文件名</param>
               /// <param name="loader" type="Function">自定义加载器</param>
+
+              if (object.object) return;
 
               var _this = this;
 
